@@ -3,13 +3,15 @@
 import { ObjectManager, UnitTypes, DebugPanel, revealLevel } from 'nyx:d2r';
 import { withGameLock } from 'nyx:memory';
 import { Markers } from './markers.js';
+import { ExitMarkers } from './exit-markers.js';
 
 const binding = internalBinding('d2r');
 
 try {
   const objMgr = new ObjectManager();
   const debugPanel = new DebugPanel(objMgr);
-  const markers = new Markers(objMgr);
+  const markers  = new Markers(objMgr);
+  const exitMarkers = new ExitMarkers(objMgr);
 
   objMgr.tick();
 
@@ -44,6 +46,7 @@ try {
   let revealed_levels = [];
   setInterval(() => {
     objMgr.tick();
+    exitMarkers.tick();
     debugPanel.refresh();
     const me = objMgr.me;
     if (!me && revealed_levels.length > 0) {

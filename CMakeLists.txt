@@ -24,6 +24,9 @@ set(NYX_D2R_SOURCES
 
 add_library(nyx.d2r SHARED ${NYX_D2R_SOURCES})
 
+# Enable ImGui <-> V8 helpers defined in vendor/nyx/vendor/imgui/imconfig.h
+target_compile_definitions(nyx.d2r PRIVATE NYX_IMGUI_V8_INTEGRATION)
+
 target_external_js_sources(nyx.d2r lib ${CMAKE_CURRENT_BINARY_DIR}/d2r_builtins.cc d2r_builtins)
 
 target_link_libraries(nyx.d2r PRIVATE nyx::dolos)
@@ -40,3 +43,11 @@ install(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/typings
   DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
   FILES_MATCHING PATTERN "*.d.ts")
+
+# Nyx loads runtime packages from a "scripts" directory next to the module.
+install(
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+  PATTERN "node_modules" EXCLUDE
+  PATTERN ".git" EXCLUDE
+  PATTERN "*.tsbuildinfo" EXCLUDE)

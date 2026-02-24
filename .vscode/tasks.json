@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake Configure (x64-release)",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/d",
+        "/c",
+        "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 -host_arch=x64 & \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe\" --preset x64-release -DCMAKE_MAKE_PROGRAM=\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja\\ninja.exe\""
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "CMake Build (x64-release)",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/d",
+        "/c",
+        "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 -host_arch=x64 & \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe\" --build out/build/x64-release"
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$msCompile"
+      ],
+      "dependsOn": "CMake Configure (x64-release)"
+    },
+    {
+      "label": "CMake Install (x64-release)",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/d",
+        "/c",
+        "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 -host_arch=x64 & \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe\" --install out/build/x64-release"
+      ],
+      "group": "build",
+      "problemMatcher": [],
+      "dependsOn": "CMake Build (x64-release)"
+    },
+    {
+      "label": "Run Injector (x64-release)",
+      "type": "shell",
+      "command": "simple_injector.exe",
+      "options": {
+        "cwd": "${workspaceFolder}/out/install/x64-release/bin"
+      },
+      "problemMatcher": [],
+      "dependsOn": "CMake Install (x64-release)"
+    }
+  ]
+}

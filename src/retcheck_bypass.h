@@ -3,6 +3,18 @@
 #include <intrin.h>
 #include <nyx/util.h>
 #include <cstdint>
+#include <type_traits>
+#include <utility>
+
+#ifndef NYX_NOINLINE
+#if defined(_MSC_VER)
+#define NYX_NOINLINE [[msvc::noinline]]
+#elif defined(__GNUC__) || defined(__clang__)
+#define NYX_NOINLINE __attribute__((noinline))
+#else
+#define NYX_NOINLINE
+#endif
+#endif
 
 namespace d2r {
 

@@ -71,6 +71,26 @@ void RegisterOffsetsWithDolos() {
 #undef REGISTER_OFFSET
 }
 
+void LogMissingOffsets(const std::vector<SignatureDef>& signatures) {
+  std::size_t missing_count = 0;
+  for (const auto& sig : signatures) {
+    if (*sig.target == nullptr) {
+      ++missing_count;
+    }
+  }
+
+  if (missing_count == 0) {
+    return;
+  }
+
+  PIPE_LOG_WARN("[Offsets] {} unresolved offsets:", missing_count);
+  for (const auto& sig : signatures) {
+    if (*sig.target == nullptr) {
+      PIPE_LOG_WARN("[Offsets]   - {} | pattern: {}", sig.name, sig.pattern);
+    }
+  }
+}
+
 }  // namespace
 
 bool InitializeOffsets() {
@@ -146,6 +166,9 @@ bool InitializeOffsets() {
   }
 
   PIPE_LOG_INFO("[Offsets] Resolved {}/{} offsets", found_count, signatures.size());
+  if (found_count != signatures.size()) {
+    LogMissingOffsets(signatures);
+  }
 
   if (exe_hash != 0 && found_count > 0) {
     auto cache = BuildCache(exe_hash, sig_hash, signatures);
